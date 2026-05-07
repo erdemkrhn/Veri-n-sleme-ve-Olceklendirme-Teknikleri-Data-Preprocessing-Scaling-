@@ -1,0 +1,1 @@
+# Veri-n-sleme-ve-Olceklendirme-Teknikleri-Data-Preprocessing-Scaling-
