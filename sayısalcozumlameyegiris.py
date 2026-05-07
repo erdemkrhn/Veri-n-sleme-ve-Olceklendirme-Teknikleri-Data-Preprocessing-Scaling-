@@ -8,9 +8,7 @@ from sklearn.preprocessing import (
     Normalizer, PowerTransformer, QuantileTransformer
 )
 
-# ---------------------------------------------------------
 # 1. VERİ YÜKLEME (GARANTİLİ YÖNTEM - ONEDRIVE UYUMLU)
-# ---------------------------------------------------------
 print("Dosya yolu aranıyor...")
 
 # Bu komut, şu an çalışan .py dosyasının tam klasör yolunu alır.
@@ -34,24 +32,19 @@ else:
     print("="*50 + "\n")
     exit() # Hata varsa aşağıya devam etmesini engeller, 'df not defined' hatasını önler.
 
-# ---------------------------------------------------------
-# 2. VERİ HAZIRLIĞI
-# ---------------------------------------------------------
 
-# 'median_income' sütununu seçiyoruz
+# 2. VERİ HAZIRLIĞI
+
 try:
     X = df[['median_income']].dropna().values
 except KeyError:
     print("HATA: 'median_income' sütunu bulunamadı. Sütun adları şunlar:")
     print(df.columns.tolist())
-    exit()
 
-# ---------------------------------------------------------
 # 3. DÖNÜŞÜM İŞLEMLERİ
-# ---------------------------------------------------------
 transformations = {}
 
-# --- A. Ölçeklendirme ---
+# Ölçeklendirme 
 transformations["Orijinal Veri"] = X
 transformations["Max Scaling"] = MaxAbsScaler().fit_transform(X)
 transformations["Min-Max Scaling"] = MinMaxScaler().fit_transform(X)
@@ -59,23 +52,23 @@ transformations["Mean Normalization"] = (X - X.mean()) / (X.max() - X.min())
 transformations["Z-Score (Standardization)"] = StandardScaler().fit_transform(X)
 transformations["Robust Scaling"] = RobustScaler().fit_transform(X)
 
-# --- B. Vektör Normlaştırma ---
+# ---  Vektör Normlaştırma ---
 transformations["L1 Norm"] = Normalizer(norm='l1').fit_transform(X.T).T 
 transformations["L2 Norm"] = Normalizer(norm='l2').fit_transform(X.T).T 
 transformations["L∞ (Max) Norm"] = Normalizer(norm='max').fit_transform(X.T).T
 
-# --- C. Dağılım Dönüşümleri ---
+# ---  Dağılım Dönüşümleri ---
 transformations["Log Dönüşümü"] = np.log1p(X)
 transformations["Box-Cox (Power)"] = PowerTransformer(method='box-cox').fit_transform(X)
 transformations["Yeo-Johnson (Power)"] = PowerTransformer(method='yeo-johnson').fit_transform(X)
 
-# --- D. Quantile Dönüşümleri ---
+# ---  Quantile Dönüşümleri ---
 transformations["Quantile (Uniform)"] = QuantileTransformer(output_distribution='uniform', random_state=42).fit_transform(X)
 transformations["Quantile (Gaussian)"] = QuantileTransformer(output_distribution='normal', random_state=42).fit_transform(X)
 
-# ---------------------------------------------------------
+
 # 4. GÖRSELLEŞTİRME
-# ---------------------------------------------------------
+
 print("Grafikler oluşturuluyor...")
 
 fig, axes = plt.subplots(5, 3, figsize=(18, 22))
